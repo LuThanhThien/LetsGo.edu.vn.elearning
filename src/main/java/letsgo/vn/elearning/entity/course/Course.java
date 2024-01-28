@@ -1,10 +1,9 @@
 package letsgo.vn.elearning.entity.course;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.Id;
+import letsgo.vn.elearning.entity.global.AuditMetaData;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +12,8 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @RequiredArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "course")
 public class Course {
 
@@ -41,12 +42,7 @@ public class Course {
     @Column(name = "number_enrollment")
     private int numberEnrollment;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
-
-
-    @Column(name = "latest_edit_date")
-    private LocalDateTime latestEditDate;
-
+    @Column(name = "metadata")
+    private AuditMetaData metaData;
 
 }

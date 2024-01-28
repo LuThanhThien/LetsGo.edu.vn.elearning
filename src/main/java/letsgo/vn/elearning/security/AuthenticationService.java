@@ -88,6 +88,9 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, jwtToken);
+
+        user.setLastLoginDate(loginDto.getLastLoginDate());     // save last login date
+
         log.info("Extracted username: " + jwtService.extractUsername(jwtToken));
         log.info("JWT Token: " + jwtToken);
         log.info("Login successfully");

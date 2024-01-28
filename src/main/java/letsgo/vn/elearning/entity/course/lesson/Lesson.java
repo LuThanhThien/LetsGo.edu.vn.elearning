@@ -1,6 +1,8 @@
-package letsgo.vn.elearning.entity.course;
+package letsgo.vn.elearning.entity.course.lesson;
 
 import jakarta.persistence.*;
+import letsgo.vn.elearning.entity.course.AssetCycleStatus;
+import letsgo.vn.elearning.entity.course.Module;
 import letsgo.vn.elearning.entity.global.AuditMetaData;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -10,27 +12,25 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "module")
-public class Module {
+@Table(name = "lesson")
+public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "module_name")
     private String name;
+    private String type;
 
-    @Column(name = "module_type")
-    private ModuleType type;
-
-    @Column(name = "module_status")
+    @Column(name = "lesson_status")
     private AssetCycleStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @JoinColumn(name = "module_id")
+    private Module module;
 
     @Column(name = "metadata")
     private AuditMetaData metaData;
+
 }

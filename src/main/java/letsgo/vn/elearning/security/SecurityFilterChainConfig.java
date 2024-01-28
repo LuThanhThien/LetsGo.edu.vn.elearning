@@ -9,8 +9,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import static letsgo.vn.elearning.entity.user.Permission.*;
 import static letsgo.vn.elearning.entity.user.Permission.USER_DELETE;
@@ -26,10 +28,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class SecurityFilterChainConfig {
 
     private static final String[]  WHITE_LIST_URL = {
-            "/api/v1/auth/**"
+            "/api/auth/**"
     };
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authProvider;
+    private final LogoutHandler logoutHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -63,12 +66,20 @@ public class SecurityFilterChainConfig {
                                 .requestMatchers(DELETE, "/user/**").hasAnyAuthority(USER_DELETE.name())
 
                                 .requestMatchers(WHITE_LIST_URL).permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(LogoutConfigurer::permitAll);
+                .logout(
+                        logout ->
+                                logout.logoutUrl("/api/auth/logout")
+                                        .addLogoutHandler(logoutHandler)
+                                        .logoutSuccessHandler((request,
+                                                               response,
+                                                               authentication)
+                                                -> SecurityContextHolder.clearContext())
+                );
         return http.build();
     }
 

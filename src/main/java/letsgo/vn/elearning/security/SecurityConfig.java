@@ -46,6 +46,9 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
+    @Bean
+    public ApplicationAuditAware auditorAware() {
+        return new ApplicationAuditAware();
+    }
 
 }

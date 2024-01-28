@@ -1,24 +1,26 @@
 package letsgo.vn.elearning.entity.user;
 
+import letsgo.vn.elearning.entity.global.AuditMetaData;
 import letsgo.vn.elearning.entity.user.TokenType;
 import jakarta.persistence.*;
 import letsgo.vn.elearning.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.util.UUID;
 
 @Entity
 @Data
 @Builder
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "token")
 public class Token {
     @Id
-    @GeneratedValue
-    @Column(name = "token_id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(unique = true, name = "token")
     private String token;
@@ -36,4 +38,7 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "metadata")
+    private AuditMetaData metaData;
 }

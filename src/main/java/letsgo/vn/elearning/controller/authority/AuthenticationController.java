@@ -1,4 +1,4 @@
-package letsgo.vn.elearning.controller;
+package letsgo.vn.elearning.controller.authority;
 
 import letsgo.vn.elearning.dto.user.LoginDto;
 import letsgo.vn.elearning.dto.user.RegisterDto;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/auth")
+@RequestMapping(value = "/api/auth")
 @Slf4j
 public class AuthenticationController {
 

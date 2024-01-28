@@ -1,10 +1,9 @@
 package letsgo.vn.elearning.entity.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import letsgo.vn.elearning.entity.global.AuditMetaData;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,20 +14,13 @@ import java.util.*;
 @Entity
 @Data
 @Builder
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "_user")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
@@ -63,15 +55,11 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    //=== META ===
-    @Column(name = "created_date")
-    private LocalDateTime createdDate = LocalDateTime.now();
+    @OneToMany(mappedBy = "user")
+    private List<Enrollment> enrollments;
 
     @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
-
-    @Column(name = "last_active_date")
-    private LocalDateTime lastActiveDate;
 
     @Column(name = "role")
     @Enumerated(value = EnumType.STRING)
@@ -80,6 +68,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     @Column(name = "tokens")
     private List<Token> tokens;
+
+    @Column(name = "metadata")
+    private AuditMetaData metaData;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -105,6 +96,8 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 
 }
 
