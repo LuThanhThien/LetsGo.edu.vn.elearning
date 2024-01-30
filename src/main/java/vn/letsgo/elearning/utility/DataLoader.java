@@ -1,0 +1,59 @@
+package vn.letsgo.elearning.utility;
+
+import vn.letsgo.elearning.entity.global.AuditMetaData;
+import vn.letsgo.elearning.entity.user.Role;
+import vn.letsgo.elearning.entity.user.User;
+import vn.letsgo.elearning.security.JwtService;
+import vn.letsgo.elearning.service.user.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+public class DataLoader implements CommandLineRunner {
+
+    @Autowired
+    private final UserService userService;
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
+
+    private final JwtService jwtService;
+
+    @Override
+    public void run(String... args) throws Exception {
+
+        if(userService.count() == 0) {
+
+            User newAdmin = User.builder()
+                    .username("admin@letsgo.vn")
+                    .password(passwordEncoder.encode("qwer1234@"))
+                    .firstName("ADMIN")
+                    .lastName("LET'S GO")
+                    .role(Role.ADMIN)
+                    .build();
+            userService.save(newAdmin);
+            String adminToken = jwtService.generateToken(newAdmin);
+            log.info("Admin token: " + adminToken);
+
+            User newUser = User.builder()
+                    .username("user@letsgo.vn")
+                    .password(passwordEncoder.encode("qwer1234@"))
+                    .firstName("USER")
+                    .lastName("LET'S GO")
+                    .role(Role.USER)
+                    .build();
+            userService.save(newUser);
+            String userToken = jwtService.generateToken(newUser);
+            log.info("User token: " + userToken);
+
+        }
+    }
+}
+
