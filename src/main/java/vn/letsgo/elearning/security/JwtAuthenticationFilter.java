@@ -1,7 +1,7 @@
     package vn.letsgo.elearning.security;
 
     import vn.letsgo.elearning.entity.user.User;
-    import vn.letsgo.elearning.repository.user.ITokenRepository;
+    import vn.letsgo.elearning.repository.user.authentication.ITokenRepository;
     import vn.letsgo.elearning.service.user.UserService;
     import jakarta.servlet.FilterChain;
     import jakarta.servlet.ServletException;

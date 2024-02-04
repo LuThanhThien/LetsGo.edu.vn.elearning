@@ -1,7 +1,6 @@
 package vn.letsgo.elearning.utility;
 
-import vn.letsgo.elearning.entity.global.AuditMetaData;
-import vn.letsgo.elearning.entity.user.Role;
+import vn.letsgo.elearning.entity.user.authentication.Role;
 import vn.letsgo.elearning.entity.user.User;
 import vn.letsgo.elearning.security.JwtService;
 import vn.letsgo.elearning.service.user.UserService;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor

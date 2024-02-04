@@ -2,7 +2,7 @@ package vn.letsgo.elearning.security;
 
 import lombok.*;
 
-@Data
+@Getter @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -3,16 +3,18 @@ package vn.letsgo.elearning.service.user;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import vn.letsgo.elearning.dto.user.UserDto;
 import vn.letsgo.elearning.entity.user.User;
+import vn.letsgo.elearning.exception.DataNotFoundException;
+import vn.letsgo.elearning.exception.user.NotAuthenticatedException;
 import vn.letsgo.elearning.exception.user.UsernameAlreadyExistsException;
 import vn.letsgo.elearning.exception.user.UsernameNotFoundCustomException;
 import vn.letsgo.elearning.repository.user.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import vn.letsgo.elearning.security.AuthenticationService;
 import vn.letsgo.elearning.utility.UploadFile;
 
 import java.util.*;
@@ -29,6 +31,7 @@ public class UserService implements IUserService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
+
     @Override
     public User save(User user) {
         try {
@@ -43,6 +46,28 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new DataNotFoundException(
+                        User.class,
+                        "Cannot find user with id: " + id
+                        )
+                );
+    }
+
+    @Override
+    public User loadUserByUsername(String username) throws UsernameNotFoundCustomException {
+        return findByUsername(username);
+    }
+
+
+
+    @Override
     public long count() {
         return userRepository.count();
     }
@@ -55,7 +80,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public User  findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() ->
                         new UsernameNotFoundCustomException("User is not found"));
@@ -89,30 +114,19 @@ public class UserService implements IUserService {
 
     @Override
     public boolean checkExistPassword(String password, String username) {
-        return false;
+        User user = this.findByUsername(username);
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
     @Override
     public void changePassword(String password, String username) {
-
-    }
-
-    @Override
-    public List<UserDto> findAll() {
-        return null;
-    }
-
-    @Override
-    public User findById(long l) {
-        return userRepository.findById(l)
-                .orElseThrow(() -> new RuntimeException());
+        User user = this.findByEmail(username);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
 
-    @Override
-    public User loadUserByUsername(String username) throws UsernameNotFoundException {
-        return findByUsername(username);
-    }
+
 }
 
 

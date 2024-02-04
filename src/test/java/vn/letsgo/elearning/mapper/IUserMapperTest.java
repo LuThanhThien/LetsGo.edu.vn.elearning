@@ -1,14 +1,12 @@
 package vn.letsgo.elearning.mapper;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.springframework.boot.test.context.SpringBootTest;
-import vn.letsgo.elearning.dto.user.RegisterDto;
+import vn.letsgo.elearning.dto.user.authentication.RegisterDto;
 import vn.letsgo.elearning.dto.user.UserDto;
 import vn.letsgo.elearning.entity.user.User;
-import vn.letsgo.elearning.mapper.IUserMapper;
+import vn.letsgo.elearning.mapper.user.IUserMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;

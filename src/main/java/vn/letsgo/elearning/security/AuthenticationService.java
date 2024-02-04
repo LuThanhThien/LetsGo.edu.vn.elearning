@@ -1,13 +1,17 @@
 package vn.letsgo.elearning.security;
 
-import vn.letsgo.elearning.dto.user.LoginDto;
-import vn.letsgo.elearning.dto.user.RegisterDto;
-import vn.letsgo.elearning.entity.user.Token;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import vn.letsgo.elearning.dto.user.authentication.LoginDto;
+import vn.letsgo.elearning.dto.user.authentication.RegisterDto;
+import vn.letsgo.elearning.entity.user.authentication.Token;
 import vn.letsgo.elearning.entity.user.User;
-import vn.letsgo.elearning.entity.user.Role;
-import vn.letsgo.elearning.entity.user.TokenType;
-import vn.letsgo.elearning.mapper.IUserMapper;
-import vn.letsgo.elearning.repository.user.ITokenRepository;
+import vn.letsgo.elearning.entity.user.authentication.Role;
+import vn.letsgo.elearning.entity.user.authentication.TokenType;
+import vn.letsgo.elearning.exception.user.NotAuthenticatedException;
+import vn.letsgo.elearning.exception.user.UsernameAlreadyExistsException;
+import vn.letsgo.elearning.mapper.user.IUserMapper;
+import vn.letsgo.elearning.repository.user.authentication.ITokenRepository;
 import vn.letsgo.elearning.repository.user.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +25,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
 
+    @Value("${application.security.jwt.max-device}")
+    private int maxDevice;
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
     private final JwtService jwtService;
@@ -44,9 +52,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterDto registerDto) {
         if (userRepository.existsByUsername(registerDto.getUsername())) {
-            return AuthenticationResponse.builder()
-                    .message("User already exists!")
-                    .build();
+            throw new UsernameAlreadyExistsException(registerDto.getUsername());
         }
         registerDto.setPassword(passwordEncoder.encode(registerDto.getPassword()));
         User user = IUserMapper.INSTANCE.registerDtoToUser(registerDto);
@@ -54,12 +60,14 @@ public class AuthenticationService {
         userRepository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
-        log.info("Extracted username: " + jwtService.extractUsername(jwtToken));
-        log.info("JWT Token: " + jwtToken);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(user, jwtToken);
 
         log.info("Register successfully");
+        log.info("Extracted username: " + jwtService.extractUsername(jwtToken));
+        log.info("JWT Token: " + jwtToken);
+        logUserInfo();
+
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -76,13 +84,7 @@ public class AuthenticationService {
         );
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
-        log.info("PERMISSIONS (before): " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        log.info("Is authenticated? (before): " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-
         securityContext.setAuthentication(authentication);
-        log.info("PERMISSION (after): " + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        log.info("Is authenticated? (after): " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
-
 
         var user = userRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow();
@@ -95,6 +97,8 @@ public class AuthenticationService {
         log.info("Extracted username: " + jwtService.extractUsername(jwtToken));
         log.info("JWT Token: " + jwtToken);
         log.info("Login successfully");
+        logUserInfo();
+
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)
                 .refreshToken(refreshToken)
@@ -102,33 +106,91 @@ public class AuthenticationService {
                 .build();
     }
 
+    public Object getCurrentPrinciple() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            return authentication.getPrincipal();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public User getCurrentUser() {
+        Object principle = this.getCurrentPrinciple();
+        if (principle instanceof User) {
+            return (User) principle;
+        }
+        else {
+            throw new NotAuthenticatedException();
+        }
+    }
+
+    public void logUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            if (authentication.getPrincipal() instanceof User) {
+                // Get the principal (User)
+                User user = (User) authentication.getPrincipal();
+                log.info("Username: " + user.getUsername());
+            } else {
+                // Get the principal (User)
+                log.info("Principle: " + authentication.getPrincipal());
+            }
+
+            // Get the authorities (roles)
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                log.info("Role: " + authority.getAuthority());
+            }
+
+            // Get additional details
+            Object details = authentication.getDetails();
+            if (details != null) {
+                log.info("Details: " + details.toString());
+            }
+
+            // Get credentials (password)
+            Object credentials = authentication.getCredentials();
+            if (credentials != null) {
+                log.info("Credentials: " + credentials.toString());
+            }
+        }
+    }
 
     private void saveUserToken(User user, String jwtToken) {
         var token = Token.builder()
-                .user(user)
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)
                 .build();
+        user.setToken(token);
         tokenRepository.save(token);
     }
 
+    private List<Token> getRevokeList(User user) {
+        var revokedUserTokens = tokenRepository.findAllValidTokenByUserId(user.getId());
+        log.info("REVOKE LIST FOR " + user.getUsername() + ": \n" + revokedUserTokens);
+        return revokedUserTokens;
+    }
+
     private void revokeAllUserTokens(User user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        if (validUserTokens.isEmpty())
+        var revokedUserTokens = getRevokeList(user);
+        if (revokedUserTokens.isEmpty()) {
             return;
-        validUserTokens.forEach(token -> {
+        }
+        revokedUserTokens.forEach(token -> {
             token.setExpired(true);
             token.setRevoked(true);
+            token.setRevokedDatetime(LocalDateTime.now());
         });
-        tokenRepository.saveAll(validUserTokens);
+        tokenRepository.saveAll(revokedUserTokens);
     }
 
     private void updateUserLastLogin(String username) {
         User user = userRepository.findByUsername(username).get();
         if (user != null) {
-            user.setLastLoginDate(LocalDateTime.now());
+            user.setLastLoginDatetime(LocalDateTime.now());
             userRepository.save(user);
         }
     }

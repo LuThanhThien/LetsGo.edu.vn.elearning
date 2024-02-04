@@ -16,7 +16,6 @@ public class GlobalExceptionHandler {
         if (isAnnotatedWithHandleGlobalException(e)) {
             GlobalExceptionPayload globalExceptionPayload = new GlobalExceptionPayload(
                     e.getMessage(),
-                    e,
                     BAD_REQUEST
             );
             return new ResponseEntity<>(globalExceptionPayload, BAD_REQUEST);

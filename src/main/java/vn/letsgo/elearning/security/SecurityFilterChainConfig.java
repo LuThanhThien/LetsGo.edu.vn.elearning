@@ -13,9 +13,9 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static vn.letsgo.elearning.entity.user.Permission.*;
-import static vn.letsgo.elearning.entity.user.Permission.USER_DELETE;
-import static vn.letsgo.elearning.entity.user.Role.*;
+import static vn.letsgo.elearning.entity.user.authentication.Permission.*;
+import static vn.letsgo.elearning.entity.user.authentication.Permission.USER_DELETE;
+import static vn.letsgo.elearning.entity.user.authentication.Role.*;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;

@@ -14,7 +14,7 @@ spring:
       max-request-size: 10MB
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 #      show-sql: true
     properties:
       hibernate:
@@ -38,3 +38,4 @@ application:
       expiration: 604800000 # 7 day
       refresh-token:
         expiration: 1209600000 # 14 days
+      max-device: 3

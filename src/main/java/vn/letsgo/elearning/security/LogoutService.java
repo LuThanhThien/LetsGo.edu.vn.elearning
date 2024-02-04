@@ -2,7 +2,7 @@ package vn.letsgo.elearning.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.letsgo.elearning.repository.user.ITokenRepository;
+import vn.letsgo.elearning.repository.user.authentication.ITokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

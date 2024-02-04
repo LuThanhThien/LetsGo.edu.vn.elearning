@@ -5,13 +5,11 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter @Setter
 @Builder
 @AllArgsConstructor
 public class GlobalExceptionPayload {
     private final String message;
-
-    private final Throwable throwable;
 
     private final HttpStatus httpStatus;
 

@@ -1,18 +1,16 @@
 package vn.letsgo.elearning.dto.user;
 
 import jakarta.persistence.Column;
+import lombok.*;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import vn.letsgo.elearning.entity.user.Gender;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
