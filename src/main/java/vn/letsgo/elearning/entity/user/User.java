@@ -78,8 +78,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<AssignmentAttempt> assignmentAttempts = new HashSet<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Wallet wallet;
+    @Builder.Default
+    @Column(name = "wallet")
+    private Wallet wallet = new Wallet();
 
     @Builder.Default
     @Column(name = "created_datetime")
@@ -144,12 +145,6 @@ public class User implements UserDetails {
                 '}';
     }
 
-    @PostPersist
-    public void initialize() {
-        // Create a new Wallet when a User is persisted
-        this.wallet = new Wallet();
-        this.wallet.setUser(this);
-    }
 
     //== Association assist method ==//
     public void setEnrollment(Enrollment enrollment) {

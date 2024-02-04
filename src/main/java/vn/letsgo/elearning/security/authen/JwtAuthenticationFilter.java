@@ -1,4 +1,4 @@
-    package vn.letsgo.elearning.security;
+    package vn.letsgo.elearning.security.authen;
 
     import vn.letsgo.elearning.entity.user.User;
     import vn.letsgo.elearning.repository.user.authentication.ITokenRepository;

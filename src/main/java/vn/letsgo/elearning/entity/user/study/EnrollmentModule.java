@@ -7,8 +7,7 @@ import vn.letsgo.elearning.entity.asset.Module;
 import java.math.BigDecimal;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor

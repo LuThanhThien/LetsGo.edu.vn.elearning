@@ -11,7 +11,7 @@ import vn.letsgo.elearning.entity.user.User;
 import vn.letsgo.elearning.entity.user.study.EnrollmentModule;
 import vn.letsgo.elearning.repository.asset.IModuleRepository;
 import vn.letsgo.elearning.repository.user.study.IEnrollmentRepository;
-import vn.letsgo.elearning.security.AuthenticationService;
+import vn.letsgo.elearning.security.authen.AuthenticationService;
 import vn.letsgo.elearning.service.user.UserService;
 import vn.letsgo.elearning.service.user.payment.PaymentService;
 
@@ -71,7 +71,7 @@ class EnrollmentServiceTest {
         when(enrollmentRepository.save(any(Enrollment.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Perform the enrollment
-        Enrollment result = enrollmentService.enroll(mockUser, enrollmentDto);
+        Enrollment result = enrollmentService.enrollModule(mockUser, enrollmentDto);
 
         // Verify interactions and assertions
 //        verify(enrollmentRepository, times(1)).save(any(Enrollment.class));

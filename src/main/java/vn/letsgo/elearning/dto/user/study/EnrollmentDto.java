@@ -9,8 +9,7 @@ import vn.letsgo.elearning.entity.user.payment.Payment;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

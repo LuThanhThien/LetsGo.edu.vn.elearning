@@ -2,7 +2,7 @@ package vn.letsgo.elearning.utility;
 
 import vn.letsgo.elearning.entity.user.authentication.Role;
 import vn.letsgo.elearning.entity.user.User;
-import vn.letsgo.elearning.security.JwtService;
+import vn.letsgo.elearning.security.authen.JwtService;
 import vn.letsgo.elearning.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -8,10 +8,9 @@ import vn.letsgo.elearning.entity.asset.Module;
 import vn.letsgo.elearning.entity.user.study.Enrollment;
 import vn.letsgo.elearning.entity.user.User;
 import vn.letsgo.elearning.repository.user.study.IEnrollmentRepository;
-import vn.letsgo.elearning.security.AuthenticationService;
-import vn.letsgo.elearning.service.user.payment.PaymentService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,14 +19,8 @@ public class EnrollmentService implements IEnrollmentService {
     @Autowired
     private final IEnrollmentRepository enrollmentRepository;
 
-    @Autowired
-    private final AuthenticationService authService;
-
-    @Autowired
-    private final PaymentService paymentService;
-
     @Override
-    public Enrollment enroll(User user, EnrollmentDto enrollmentDto) {
+    public Enrollment enrollModule(User user, EnrollmentDto enrollmentDto) {
 
         Enrollment enrollment = Enrollment.createEnrollment(
                 user,
@@ -58,4 +51,16 @@ public class EnrollmentService implements IEnrollmentService {
         return enrollmentRepository.findByUserId(id);
     }
 
+    @Override
+    public Optional<Enrollment> findByUserIdAndModuleId(long userId, long moduleId) {
+        return enrollmentRepository.findByUserIdAndModuleId(userId, moduleId);
+    }
+
+    @Override
+    public boolean hasPaidForModule(Long userId, Long moduleId) {
+        Optional<Enrollment> enrollments = enrollmentRepository.findByUserIdAndModuleId(userId, moduleId);
+        Enrollment enrollment = enrollments.get();
+        if (enrollment == null) { return false; }
+        return enrollment.isPaid();
+    }
 }

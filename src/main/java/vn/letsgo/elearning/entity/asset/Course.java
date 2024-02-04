@@ -24,15 +24,10 @@ public class Course extends Asset {
     @Column(name = "course_description")
     private String description;
 
-    @Column(name = "course_level")
-    @Enumerated(value = EnumType.ORDINAL)
-    private CourseLevel level;
-
     @Builder.Default
     @Column(name = "chapters")
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private Set<Chapter> chapters = new HashSet<>();
-
 
 
 }

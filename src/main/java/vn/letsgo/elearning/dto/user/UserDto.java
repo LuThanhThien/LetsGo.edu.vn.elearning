@@ -9,8 +9,7 @@ import jakarta.persistence.Enumerated;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -9,8 +9,7 @@ import vn.letsgo.elearning.entity.user.User;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor

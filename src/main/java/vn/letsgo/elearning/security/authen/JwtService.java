@@ -1,4 +1,4 @@
-package vn.letsgo.elearning.security;
+package vn.letsgo.elearning.security.authen;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

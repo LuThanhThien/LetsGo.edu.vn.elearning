@@ -1,4 +1,4 @@
-package vn.letsgo.elearning.security;
+package vn.letsgo.elearning.security.authen;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

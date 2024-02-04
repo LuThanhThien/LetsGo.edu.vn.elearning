@@ -12,8 +12,7 @@ import static vn.letsgo.elearning.entity.asset.AssetCycleStatus.PENDING;
 import static vn.letsgo.elearning.entity.asset.AssetDisplayStatus.HIDDEN;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor

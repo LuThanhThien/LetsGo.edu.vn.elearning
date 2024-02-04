@@ -2,8 +2,8 @@ package vn.letsgo.elearning.controller.authority;
 
 import vn.letsgo.elearning.dto.user.authentication.LoginDto;
 import vn.letsgo.elearning.dto.user.authentication.RegisterDto;
-import vn.letsgo.elearning.security.AuthenticationResponse;
-import vn.letsgo.elearning.security.AuthenticationService;
+import vn.letsgo.elearning.security.authen.AuthenticationResponse;
+import vn.letsgo.elearning.security.authen.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

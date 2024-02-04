@@ -1,4 +1,4 @@
-package vn.letsgo.elearning.security;
+package vn.letsgo.elearning.security.audit;
 
 import vn.letsgo.elearning.entity.user.User;
 import org.springframework.data.domain.AuditorAware;

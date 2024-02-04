@@ -1,4 +1,4 @@
-package vn.letsgo.elearning.security;
+package vn.letsgo.elearning.security.authen;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;

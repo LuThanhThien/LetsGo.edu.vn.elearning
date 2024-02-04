@@ -6,8 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import vn.letsgo.elearning.entity.global.AuditEntity;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

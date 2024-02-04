@@ -4,7 +4,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import vn.letsgo.elearning.dto.user.UserDto;
 import vn.letsgo.elearning.entity.user.User;
 import vn.letsgo.elearning.exception.DataNotFoundException;
-import vn.letsgo.elearning.exception.user.NotAuthenticatedException;
 import vn.letsgo.elearning.exception.user.UsernameAlreadyExistsException;
 import vn.letsgo.elearning.exception.user.UsernameNotFoundCustomException;
 import vn.letsgo.elearning.repository.user.IUserRepository;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import vn.letsgo.elearning.security.AuthenticationService;
 import vn.letsgo.elearning.utility.UploadFile;
 
 import java.util.*;

@@ -9,7 +9,7 @@ import vn.letsgo.elearning.entity.user.User;
 import java.math.BigDecimal;
 
 @Embeddable
-@Setter @Getter
+@Getter @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor

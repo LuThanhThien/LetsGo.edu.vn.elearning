@@ -14,8 +14,7 @@ import static vn.letsgo.elearning.entity.asset.AssetCycleStatus.DELETED;
 import static vn.letsgo.elearning.entity.asset.AssetDisplayStatus.HIDDEN;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)

@@ -1,16 +1,15 @@
 package vn.letsgo.elearning.service.user.study;
 
 import vn.letsgo.elearning.dto.user.study.EnrollmentDto;
-import vn.letsgo.elearning.entity.asset.Module;
 import vn.letsgo.elearning.entity.user.study.Enrollment;
 import vn.letsgo.elearning.entity.user.User;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 public interface IEnrollmentService {
 
-    Enrollment enroll(User user, EnrollmentDto enrollmentDto);
+    Enrollment enrollModule(User user, EnrollmentDto enrollmentDto);
 
     Enrollment save(Enrollment enrollment);
 
@@ -20,4 +19,7 @@ public interface IEnrollmentService {
 
     List<Enrollment> findByUserId(long id);
 
+    Optional<Enrollment> findByUserIdAndModuleId(long userId, long moduleId);
+
+    boolean hasPaidForModule(Long userId, Long moduleId);
 }

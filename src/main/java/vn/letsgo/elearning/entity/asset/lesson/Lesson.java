@@ -26,7 +26,5 @@ public abstract class Lesson extends Asset {
     @Column(name = "lesson_order")
     private int lessonOrder;
 
-    @Column(name = "module_price")
-    private long modulePrice;
 
 }

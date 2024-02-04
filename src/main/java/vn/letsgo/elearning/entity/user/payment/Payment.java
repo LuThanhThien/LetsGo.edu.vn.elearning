@@ -9,6 +9,7 @@ import vn.letsgo.elearning.entity.user.study.Enrollment;
 
 import java.math.BigDecimal;
 
+import static vn.letsgo.elearning.entity.user.payment.PaymentStatus.COMPLETED;
 import static vn.letsgo.elearning.entity.user.payment.PaymentStatus.PENDING;
 
 @Entity
@@ -37,6 +38,14 @@ public class Payment extends AuditEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "enrollment_id")
     private Enrollment enrollment;
+
+    //== Association Assist Method ==//
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        if (this.paymentStatus == COMPLETED) {
+            return;
+        }
+        this.paymentStatus = paymentStatus;
+    }
 
 
     //== Create method ==//

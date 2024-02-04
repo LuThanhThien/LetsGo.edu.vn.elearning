@@ -8,8 +8,7 @@ import vn.letsgo.elearning.entity.global.AuditEntity;
 import vn.letsgo.elearning.entity.user.User;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
